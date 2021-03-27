@@ -1,0 +1,126 @@
+{
+	"info": {
+		"_postman_id": "b49becc8-b954-4d2c-9fe6-b97bb9ec190b",
+		"name": "PaymentGateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Pay",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:6600/v1/pay",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6600",
+					"path": [
+						"v1",
+						"pay"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://21cab24e-2161-4614-9dbe-9f5e2e897643.mock.pstmn.io/pay",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cardnumber\":\"123\",\r\n    \"amount\" : 1,\r\n    \"curreny\" : \"GBS\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://21cab24e-2161-4614-9dbe-9f5e2e897643.mock.pstmn.io/pay",
+					"protocol": "https",
+					"host": [
+						"21cab24e-2161-4614-9dbe-9f5e2e897643",
+						"mock",
+						"pstmn",
+						"io"
+					],
+					"path": [
+						"pay"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "https://21cab24e-2161-4614-9dbe-9f5e2e897643.mock.pstmn.io/pay",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cardnumber\":\"123\",\r\n    \"amount\" : 1,\r\n    \"curreny\" : \"GBS\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://21cab24e-2161-4614-9dbe-9f5e2e897643.mock.pstmn.io/pay",
+							"protocol": "https",
+							"host": [
+								"21cab24e-2161-4614-9dbe-9f5e2e897643",
+								"mock",
+								"pstmn",
+								"io"
+							],
+							"path": [
+								"pay"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"status\": \"Failure\"\n}"
+				},
+				{
+					"name": "https://21cab24e-2161-4614-9dbe-9f5e2e897643.mock.pstmn.io/pay Copy",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cardnumber\":\"123\",\r\n    \"amount\" : 1,\r\n    \"curreny\" : \"GBP\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://21cab24e-2161-4614-9dbe-9f5e2e897643.mock.pstmn.io/pay",
+							"protocol": "https",
+							"host": [
+								"21cab24e-2161-4614-9dbe-9f5e2e897643",
+								"mock",
+								"pstmn",
+								"io"
+							],
+							"path": [
+								"pay"
+							]
+						}
+					},
+					"_postman_previewlanguage": "json",
+					"header": null,
+					"cookie": [],
+					"body": "{\n    \"status\": \"Success\"\n}"
+				}
+			]
+		}
+	]
+}

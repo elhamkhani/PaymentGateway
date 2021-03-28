@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using PaymentGateway.Helpers;
 using PaymentGateway.Services.BankService.Models;
 using System.Net.Http;
 using System.Text;
@@ -26,7 +27,7 @@ namespace PaymentGateway.Services.BankService
 
             var content = new StringContent(JsonConvert.SerializeObject(paymentRequest), Encoding.UTF8, "application/json");
             
-            var result = await client.PostAsync(_config["Bank:PaymentEndpoint"], content);
+            var result = await client.PostAsync(_config["BankPaymentEndpoint"], content);
             
             if (result.IsSuccessStatusCode)
             {
@@ -38,7 +39,7 @@ namespace PaymentGateway.Services.BankService
             }
             else
             {
-                _logger.LogError($"Payment failed: {paymentRequest.Cardnumber} + {paymentRequest.Amount} + {paymentRequest.Currency}");
+                _logger.LogError($"Payment failed: {paymentRequest.CardNumber.Mask(4)} + {paymentRequest.Amount} + {paymentRequest.Currency}");
 
                 return new BankPaymentResponse { status = BankPaymentProcessStatus.Failure };
             }

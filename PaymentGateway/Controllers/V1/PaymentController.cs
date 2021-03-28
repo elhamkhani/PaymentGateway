@@ -42,11 +42,21 @@ namespace PaymentGateway.Controllers
         }
 
         [HttpGet]
-        [Route("Retrieve")]
+        [Route("Retrieve/{identifier}")]
         [Description("Retrieve thedetails of a previously made payment.")]
-        public IActionResult Retrieve()
+        public async Task<IActionResult> Retrieve(string identifier)
         {
-            return Ok(new { identifier = "" });
+            var result = await _paymentService.Retrieve(identifier);
+
+            return Ok(new
+            {
+                date = result.PaymentDate,
+                successfull = result.isSuccessfull,
+                cardnumber = result.CardNumber,
+                expiryMonth = result.ExpiryMonth,
+                expiryYear = result.ExpiryYear,
+                currency = result.Currency
+            });
         }
     }
 }

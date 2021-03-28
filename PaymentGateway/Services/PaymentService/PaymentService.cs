@@ -5,6 +5,7 @@ using PaymentGateway.Services.CosmosDbService;
 using PaymentGateway.Services.PaymentService.Models;
 using System;
 using System.Threading.Tasks;
+using PaymentGateway.Helpers;
 
 namespace PaymentGateway.Services.PaymentService
 {
@@ -26,33 +27,35 @@ namespace PaymentGateway.Services.PaymentService
             {
                 Amount = model.Amount,
                 Currency = model.Currency,
-                Cardnumber = model.Cardnumber,
+                CardNumber = model.CardNumber,
                 ExpiryMonth = model.ExpiryMonth,
                 ExpiryYear = model.ExpiryYear
             };
 
             var result = await _bankPaymentService.ProcessPayment(bankPayment);
 
-
-            if (result.status == BankPaymentProcessStatus.Success)
+            var isSuccess = result.status == BankPaymentProcessStatus.Success;
+            var paymentRecord = new PaymentRecord
             {
-                var paymentRecord = new PaymentRecord { Date = new DateTime(), Id = result.identifier, isSuccessfull = true, lastfourDigits = model.Cardnumber };
+                Id = result.identifier,
+                PaymentDate = DateTime.Now,
+                isSuccessfull = isSuccess,
+                CardNumber = model.CardNumber.Mask(4),
+                Amount = model.Amount,
+                ExpiryMonth = model.ExpiryMonth,
+                ExpiryYear = model.ExpiryYear,
+                Currency = model.Currency
+            };
 
-                await _cosmosDbService.AddItemAsync(paymentRecord);
-                return new PaymentResponse
-                {
-                    identifier = result.identifier,
-                    status = PaymentProcessStatus.Success
-                };
-            }
-            else
+            await _cosmosDbService.AddItemAsync(paymentRecord);
+           
+            _logger.LogError($"Payment was {result.status} for cardnumber {model.CardNumber}.");
+            
+            return new PaymentResponse
             {
-                return new PaymentResponse
-                {
-                   status = PaymentProcessStatus.Failure
-                };
-            }
-
+                identifier = result.identifier,
+                status = isSuccess? PaymentProcessStatus.Success: PaymentProcessStatus.Failure
+            };
         }
 
         public async Task<PaymentRecord> Retrieve(string id)
@@ -60,4 +63,5 @@ namespace PaymentGateway.Services.PaymentService
             return await _cosmosDbService.GetItemAsync(id);
         }
     }
+
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using PaymentGateway.Helpers;
 using PaymentGateway.Services.BankService.Models;
@@ -12,22 +11,28 @@ namespace PaymentGateway.Services.BankService
 {
     public class BankPaymentService : IBankPaymentService
     {
-        private readonly IConfiguration _config;
         private readonly ILogger<BankPaymentService> _logger;
+        private readonly HttpClient _client;
 
-        public BankPaymentService(ILogger<BankPaymentService> logger, IConfiguration config)
+
+        public BankPaymentService(ILogger<BankPaymentService> logger, HttpClient client)
         {
             _logger = logger;
-            _config = config;
+            _client = client;
         }
 
         public async Task<BankPaymentResponse> ProcessPayment(BankPaymentRequest paymentRequest)
         {
-            using var client = new HttpClient();
+            var requestMessage = new HttpRequestMessage
+            { 
+                Method = HttpMethod.Post,
+                Content = new StringContent(
+                JsonConvert.SerializeObject(paymentRequest),
+                Encoding.UTF8,
+                "application/json")
+            };
 
-            var content = new StringContent(JsonConvert.SerializeObject(paymentRequest), Encoding.UTF8, "application/json");
-            
-            var result = await client.PostAsync(_config["BankPaymentEndpoint"], content);
+            var result = await _client.SendAsync(requestMessage);
             
             if (result.IsSuccessStatusCode)
             {
@@ -35,13 +40,13 @@ namespace PaymentGateway.Services.BankService
 
                 var responseContent = JsonConvert.DeserializeObject<BankPaymentResponse>(response);
 
-                return new BankPaymentResponse { identifier = responseContent.identifier, status = BankPaymentProcessStatus.Success };
+                return new BankPaymentResponse { Identifier = responseContent.Identifier, Status = BankPaymentProcessStatus.Success };
             }
             else
             {
                 _logger.LogError($"Payment failed: {paymentRequest.CardNumber.Mask(4)} + {paymentRequest.Amount} + {paymentRequest.Currency}");
 
-                return new BankPaymentResponse { status = BankPaymentProcessStatus.Failure };
+                return new BankPaymentResponse { Status = BankPaymentProcessStatus.Failure };
             }
 
         }

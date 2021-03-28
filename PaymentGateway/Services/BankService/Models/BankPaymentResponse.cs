@@ -2,7 +2,7 @@
 {
     public class BankPaymentResponse
     {
-        public string identifier { get; set; }
-        public BankPaymentProcessStatus status { get; set; }
+        public string Identifier { get; set; }
+        public BankPaymentProcessStatus Status { get; set; }
     }
 }

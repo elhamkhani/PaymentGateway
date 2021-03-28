@@ -2,9 +2,9 @@
 {
     public class PaymentResponse
     {
-        public string identifier { get; set; }
-        public PaymentProcessStatus status { get; set; }
-        public string errorMessage { get; set; }
+        public string Identifier { get; set; }
+        public PaymentProcessStatus Status { get; set; }
+        public string ErrorMessage { get; set; }
   
     }
 }

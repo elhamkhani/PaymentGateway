@@ -28,7 +28,6 @@ namespace PaymentGateway
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -38,6 +37,11 @@ namespace PaymentGateway
             services.AddSingleton<ICosmosDbService>(InitializeCosmosClientInstanceAsync(Configuration.GetSection("CosmosDb")).GetAwaiter().GetResult());
             services.AddScoped<IBankPaymentService, BankPaymentService>();
             services.AddScoped<IPaymentService, PaymentService>();
+
+            services.AddHttpClient<IBankPaymentService, BankPaymentService>(client =>
+             {
+                 client.BaseAddress = new Uri(Configuration["BankPaymentEndpoint"]);
+             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,8 +53,6 @@ namespace PaymentGateway
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "PaymentGateway v1"));
             }
-
-            
 
             app.UseHttpsRedirection();
 

@@ -26,7 +26,7 @@ namespace PaymentGateway.Services.PaymentService
             var bankPayment = new BankPaymentRequest
             {
                 Amount = model.Amount,
-                Currency = model.Currency,
+                Currency = model.Currency.ToString(),
                 CardNumber = model.CardNumber,
                 ExpiryMonth = model.ExpiryMonth,
                 ExpiryYear = model.ExpiryYear
@@ -34,10 +34,10 @@ namespace PaymentGateway.Services.PaymentService
 
             var result = await _bankPaymentService.ProcessPayment(bankPayment);
 
-            var isSuccess = result.status == BankPaymentProcessStatus.Success;
+            var isSuccess = result.Status == BankPaymentProcessStatus.Success;
             var paymentRecord = new PaymentRecord
             {
-                Id = result.identifier,
+                Id = result.Identifier,
                 PaymentDate = DateTime.Now,
                 isSuccessfull = isSuccess,
                 CardNumber = model.CardNumber.Mask(4),
@@ -48,14 +48,28 @@ namespace PaymentGateway.Services.PaymentService
             };
 
             await _cosmosDbService.AddItemAsync(paymentRecord);
-           
-            _logger.LogError($"Payment was {result.status} for cardnumber {model.CardNumber}.");
-            
-            return new PaymentResponse
+
+
+            if (isSuccess)
             {
-                identifier = result.identifier,
-                status = isSuccess? PaymentProcessStatus.Success: PaymentProcessStatus.Failure
-            };
+                _logger.LogError($"Payment was successfull for cardnumber {paymentRecord.CardNumber}.");
+                return new PaymentResponse
+                {
+                    Identifier = result.Identifier,
+                    Status = PaymentProcessStatus.Success
+
+                };
+            }
+            else
+            {
+                _logger.LogError($"Payment failed for cardnumber {paymentRecord.CardNumber}.");
+                return new PaymentResponse
+                {
+                    Identifier = result.Identifier,
+                    Status = PaymentProcessStatus.Failure,
+                    ErrorMessage = "Payment failed"
+                };
+            }
         }
 
         public async Task<PaymentRecord> Retrieve(string id)

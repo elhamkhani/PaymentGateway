@@ -35,8 +35,8 @@ namespace PaymentGateway.Controllers
 
             var result = await _paymentService.Pay(model);
 
-            if (result.status == PaymentProcessStatus.Success)
-                return Ok(new { identifier = result.identifier, status = result.status });
+            if (result.Status == PaymentProcessStatus.Success)
+                return Ok(new { identifier = result.Identifier, status = result.Status });
             else
                 return StatusCode(500);
         }

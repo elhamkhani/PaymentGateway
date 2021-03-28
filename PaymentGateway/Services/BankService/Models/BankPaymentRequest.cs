@@ -17,6 +17,7 @@ namespace PaymentGateway.Services.BankService.Models
         [Required]
         public decimal Amount { get; set; }
         [Required]
-        public Currency Currency { get; set; }
+        [StringLength(3)]
+        public string Currency { get; set; }
     }
 }

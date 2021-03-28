@@ -1,3 +1,5 @@
 .vs/
 PaymentGateway/obj/
 PaymentGateway/bin/
+PaymentGateway.Tests/obj/
+PaymentGateway.Tests/bin/

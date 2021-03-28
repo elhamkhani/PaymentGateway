@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PaymentGateway.Helpers;
 using PaymentGateway.Services.PaymentService;
 using PaymentGateway.Services.PaymentService.Models;
 using System;
@@ -25,20 +26,23 @@ namespace PaymentGateway.Controllers
             _paymentService = paymentService;
         }
 
-        
+
 
         [HttpPost]
         [Route("Pay")]
         [Description("Process payment using details sent by merchant.")]
         public async Task<IActionResult> Pay([FromBody] PaymentRequest model)
         {
-
-            var result = await _paymentService.Pay(model);
-
-            if (result.Status == PaymentProcessStatus.Success)
-                return Ok(new { identifier = result.Identifier, status = result.Status });
-            else
-                return StatusCode(500);
+            try
+            {
+                Guard.CurrnecyNotFound(model.Currency);
+                var result = await _paymentService.Pay(model);
+                return Ok(new { identifier = result.Identifier, status = result.Status.ToString() });
+            }
+            catch (Exception exc)
+            {
+                return Problem(exc.Message);
+            }
         }
 
         [HttpGet]

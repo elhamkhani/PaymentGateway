@@ -40,7 +40,7 @@ namespace PaymentGateway.Services.BankService
 
                 var responseContent = JsonConvert.DeserializeObject<BankPaymentResponse>(response);
 
-                return new BankPaymentResponse { Identifier = responseContent.Identifier, Status = BankPaymentProcessStatus.Success };
+                return new BankPaymentResponse { Identifier = responseContent.Identifier, Status = responseContent.Status };
             }
             else
             {

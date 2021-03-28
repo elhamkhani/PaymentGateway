@@ -37,7 +37,7 @@ namespace PaymentGateway.Services.PaymentService
             var isSuccess = result.Status == BankPaymentProcessStatus.Success;
             var paymentRecord = new PaymentRecord
             {
-                Id = result.Identifier,
+                Id = result.Identifier ?? Guid.NewGuid().ToString(),
                 PaymentDate = DateTime.Now,
                 isSuccessfull = isSuccess,
                 CardNumber = model.CardNumber.Mask(4),
@@ -55,7 +55,7 @@ namespace PaymentGateway.Services.PaymentService
                 _logger.LogError($"Payment was successfull for cardnumber {paymentRecord.CardNumber}.");
                 return new PaymentResponse
                 {
-                    Identifier = result.Identifier,
+                    Identifier = paymentRecord.Id,
                     Status = PaymentProcessStatus.Success
 
                 };
@@ -65,7 +65,7 @@ namespace PaymentGateway.Services.PaymentService
                 _logger.LogError($"Payment failed for cardnumber {paymentRecord.CardNumber}.");
                 return new PaymentResponse
                 {
-                    Identifier = result.Identifier,
+                    Identifier = paymentRecord.Id,
                     Status = PaymentProcessStatus.Failure,
                     ErrorMessage = "Payment failed"
                 };

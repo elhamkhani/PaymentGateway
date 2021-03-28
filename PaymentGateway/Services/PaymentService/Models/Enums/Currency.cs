@@ -1,7 +1,13 @@
-﻿namespace PaymentGateway.Enums
+﻿using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
+using System.Text.Json.Serialization;
+
+namespace PaymentGateway.Enums
 {
+    
     public enum Currency
     {
+        NONE,
         AED,
         AFN,
         ALL,

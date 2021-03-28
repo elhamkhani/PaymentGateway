@@ -1,5 +1,6 @@
 using PaymentGateway.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace PaymentGateway.Services.PaymentService.Models
 {

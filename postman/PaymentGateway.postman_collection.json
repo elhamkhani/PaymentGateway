@@ -10,15 +10,25 @@
 			"request": {
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Cardnumber\":\"1234567891234569\",\r\n    \"ExpiryYear\":\"23\",\r\n    \"ExpiryMonth\":\"11\",\r\n    \"Amount\" : 1,\r\n    \"Currency\" : \"GBP\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
-					"raw": "http://localhost:6600/v1/pay",
+					"raw": "http://localhost:6600/api/payment/pay",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "6600",
 					"path": [
-						"v1",
+						"api",
+						"payment",
 						"pay"
 					]
 				}
@@ -27,6 +37,17 @@
 		},
 		{
 			"name": "https://21cab24e-2161-4614-9dbe-9f5e2e897643.mock.pstmn.io/pay",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -118,9 +139,31 @@
 					"_postman_previewlanguage": "json",
 					"header": null,
 					"cookie": [],
-					"body": "{\n    \"status\": \"Success\"\n}"
+					"body": "{\n    \"identifier\": \"{{$guid}}\",\n    \"status\": \"Success\"\n}"
 				}
 			]
+		},
+		{
+			"name": "Retrieve",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:6600/api/Payment/Retrieve/a3cf8270-e689-4921-9718-10addd385d2f",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "6600",
+					"path": [
+						"api",
+						"Payment",
+						"Retrieve",
+						"a3cf8270-e689-4921-9718-10addd385d2f"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

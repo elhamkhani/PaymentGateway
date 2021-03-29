@@ -61,7 +61,7 @@ namespace PaymentGateway.Tests
 
             var payment = await _sut.ProcessPayment(validRequest);
 
-            Assert.NotNull(payment);
+           
 
             handlerMock.Protected().Verify("SendAsync",
                                             Times.Exactly(1),
@@ -70,6 +70,53 @@ namespace PaymentGateway.Tests
                                                && req.RequestUri == uri),
                                             ItExpr.IsAny<CancellationToken>()
                                          );
+
+            Assert.NotNull(payment);
+            Assert.Equal(BankPaymentProcessStatus.Success, payment.Status);
+            Assert.Equal("d54c1c7c-2c02-4958-9596-2b9d0e4971ef", payment.Identifier);
+        }
+
+        [Fact]
+        public async void Given_Failed_API_Call_Should_Return_Failure_Response()
+        {
+            var handlerMock = new Mock<HttpMessageHandler>();
+
+            var response = new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.Forbidden,
+                Content = new StringContent(@"{""error"": ""forbiden""}"),
+            };
+
+            handlerMock
+               .Protected()
+               .Setup<Task<HttpResponseMessage>>(
+                  "SendAsync",
+                  ItExpr.IsAny<HttpRequestMessage>(),
+                  ItExpr.IsAny<CancellationToken>())
+               .ReturnsAsync(response);
+
+            var uri = new Uri("http://test.com/");
+
+            var httpClient = new HttpClient(handlerMock.Object)
+            {
+                BaseAddress = uri,
+            };
+
+            _sut = new BankPaymentService(_logger.Object, httpClient);
+
+            var payment = await _sut.ProcessPayment(validRequest);
+
+            handlerMock.Protected().Verify("SendAsync",
+                                            Times.Exactly(1),
+                                            ItExpr.Is<HttpRequestMessage>(req =>
+                                               req.Method == HttpMethod.Post
+                                               && req.RequestUri == uri),
+                                            ItExpr.IsAny<CancellationToken>()
+                                         );
+
+            Assert.NotNull(payment);
+            Assert.Null(payment.Identifier);
+            Assert.Equal(BankPaymentProcessStatus.Failure, payment.Status);
         }
     }
 }

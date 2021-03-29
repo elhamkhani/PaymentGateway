@@ -26,8 +26,6 @@ namespace PaymentGateway.Controllers
             _paymentService = paymentService;
         }
 
-
-
         [HttpPost]
         [Route("Pay")]
         [Description("Process payment using details sent by merchant.")]
@@ -41,6 +39,7 @@ namespace PaymentGateway.Controllers
             }
             catch (Exception exc)
             {
+                _logger.LogError("Pay API failed", exc.StackTrace);
                 return Problem(exc.Message);
             }
         }
@@ -50,17 +49,25 @@ namespace PaymentGateway.Controllers
         [Description("Retrieve thedetails of a previously made payment.")]
         public async Task<IActionResult> Retrieve(string identifier)
         {
-            var result = await _paymentService.Retrieve(identifier);
-
-            return Ok(new
+            try
             {
-                date = result.PaymentDate,
-                successfull = result.isSuccessfull,
-                cardnumber = result.CardNumber,
-                expiryMonth = result.ExpiryMonth,
-                expiryYear = result.ExpiryYear,
-                currency = result.Currency
-            });
+                var result = await _paymentService.Retrieve(identifier);
+
+                return Ok(new
+                {
+                    date = result.PaymentDate,
+                    successfull = result.isSuccessfull,
+                    cardnumber = result.CardNumber,
+                    expiryMonth = result.ExpiryMonth,
+                    expiryYear = result.ExpiryYear,
+                    currency = result.Currency
+                });
+            }
+            catch (Exception exc)
+            {
+                _logger.LogError("Retrieve API failed", exc.StackTrace);
+                return Problem(exc.Message);
+            }
         }
     }
 }

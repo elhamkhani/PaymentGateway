@@ -16,16 +16,8 @@ is running on 'http://localhost:6600/'.
 
 Endpoints for processing a payment and retrieving the details of a previously made payment.
 
-Each endpoint requires a valid Token to be included in the header of the
-request. A Token can be acquired from login endpoint.
-
 * Pay : `POST /v1/api/pay/`
 * Retrieve : `GET /v1/api/retrieve/{identifier}`
-
-## Authentication
-
-To get the authentication token, each merchant needs to login
-* Login : `POST /v1/api/login/`
 
 ## Postman collection
 
@@ -42,3 +34,7 @@ The Bank Server Endpoint should be set in appsettings.json file.
 The payment records get saved in cosmos DB. 
 To run the application locally, use [Azure Cosmos DB Emulator](https://docs.microsoft.com/en-us/azure/cosmos-db/local-emulator?tabs=cli%2Cssl-netstd21)
 Account and Key should be set in appsettings.json file.
+
+## Wanted to add if I had more time
+* Each merchant should be able to retrieve only its own payments
+* Each endpoint requires a valid Token in the header of the request. A Token can be acquired from login endpoint.

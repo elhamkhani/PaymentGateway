@@ -103,7 +103,7 @@ namespace PaymentGateway.Tests
 
             var actual = await _sut.Pay(validRequest);
 
-            Assert.Null(actual.Identifier);
+            Assert.NotNull(actual.Identifier);
             Assert.Equal(PaymentProcessStatus.Failure, actual.Status);
             Assert.Equal("Payment failed", actual.ErrorMessage);
 

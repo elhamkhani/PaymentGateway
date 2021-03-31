@@ -10,7 +10,7 @@ receive either a successful or unsuccessful response
 
 
 Where full URLs are provided in responses they will be rendered as if service
-is running on 'http://localhost:6600/'.
+is running on 'http://localhost:6600/' (Swagger documentation available).
 
 ## Endpoints
 
@@ -26,7 +26,7 @@ Import following collection to postman:
 
 ## Bank Mock server
 
-In postman collection there is a mock server that will return two statuses(successful or unsuccessful) from bank server.
+In postman collection there is a mock server that will return two statuses(successful or failed) from bank server.
 The Bank Server Endpoint should be set in appsettings.json file.
 
 ## CosmosDB 
@@ -35,6 +35,8 @@ The payment records get saved in cosmos DB.
 To run the application locally, use [Azure Cosmos DB Emulator](https://docs.microsoft.com/en-us/azure/cosmos-db/local-emulator?tabs=cli%2Cssl-netstd21)
 Account and Key should be set in appsettings.json file.
 
-## Wanted to add if I had more time
-* Each merchant should be able to retrieve only its own payments
-* Each endpoint requires a valid Token in the header of the request. A Token can be acquired from login endpoint.
+## Other features would have done if i had more time
+* Data encryption: using punlic and private keys to sign each request
+* Authentication and Authorization: 
+** Each merchant should authenticate using login endpoint and receive a token which passes in the header of the following requests.
+** Each merchant should be able to retrieve only its own payments.
